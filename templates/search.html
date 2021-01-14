@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+{% load static %}
+    <html>
+    <head>
+        <title>Search Aggregator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    </head>
+    <body>
+    <div>
+
+    <form class="example" style="margin:auto;max-width:500px" action="{% url 'product:search' %}" method="post">{% csrf_token %}
+
+      <input type="text" placeholder="Search Products.." name="search" >
+      <button type="submit"><i class="fa fa-search"></i></button>
+    </form><hr>
+        {% if data %}
+         <div class="grid-container">
+  {% for product in data %}
+    <div class="row">
+  <div class="column" style="background-color:white;">
+          <img src={{ product.image }} alt="Avatar" style="width:200px;height:200px">
+      <div>
+          <span><b>{{ product.name }}</b></span>
+          <br>
+                        <span>INR {{ product.price }}</span>
+          <br>
+                  <span><a href={{ product.url }} target="_blank"> Buy Now</a> </span>
+      </div>
+
+  </div>
+    </div>
+
+         {% endfor %}
+             </div>
+  {% endif %}
+
+
+{% if products.has_other_pages %}
+  <ul class="pagination">
+    {% if products.has_previous %}
+      <li><a href="?page={{ products.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in products.paginator.page_range %}
+      {% if products.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if products.has_next %}
+      <li><a href="?page={{ products.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+{% endif %}
+</div>
+
+    </body>
+    </html> 
